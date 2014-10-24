@@ -1,6 +1,6 @@
 # migrat-postgres
 
-A PostgreSQL adapter for [Migrat](https://github.com/naturalatlas/migrat).
+The official [PostgreSQL](http://www.postgresql.org/) plugin for [Migrat](https://github.com/naturalatlas/migrat).
 
 - Implements global locking.
 - Implements global migration state storage, retrieval. 
@@ -10,7 +10,7 @@ A PostgreSQL adapter for [Migrat](https://github.com/naturalatlas/migrat).
 $ npm install migrat-postgres --save
 ```
 
-## Configuration (migrat.config.js)
+### Configuration (`migrat.config.js`)
 
 ```js
 var postgres = require('migrat-postgres');
@@ -30,13 +30,13 @@ module.exports = {
 };
 ```
 
-## Creating Migrations
+### Creating Migrations
 
-```
-migrat create <name> --type=psql
+```sh
+$ migrat create <name> --type=psql
 ```
 
-This will create a SQL file in the migrations directory that you can write normal SQL in – just don't remove the comments:
+This will create a SQL file in the migrations directory that you can write normal SQL in. Just be sure to not remove the comments (they are used to pick out the queries):
 
 ```sql
 -- up:
