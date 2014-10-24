@@ -1,0 +1,29 @@
+{
+  "name": "migrat-postgres",
+  "version": "0.0.0",
+  "description": "PostgreSQL adapter for the Migrat migration tool.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha test -R list"
+  },
+  "keywords": [
+    "migrat",
+    "migration",
+    "data",
+    "postgres",
+    "postgresql",
+    "sql"
+  ],
+  "author": "Brian Reavis <brian@thirdroute.com>",
+  "license": "Apache License, v2.0",
+  "peerDependencies": {
+    "migrat": "*"
+  },
+  "dependencies": {
+    "pg": "^3.6.2"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "chai": "^1.9.2"
+  }
+}
