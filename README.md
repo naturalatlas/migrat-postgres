@@ -18,7 +18,9 @@ var postgres = require('migrat-postgres');
 module.exports = {
     plugins: [
         postgres({
-            username: 'yourusername',
+            host: 'localhost',
+            port: 5432,
+            user: 'yourusername',
             password: 'yourpassword',
             database: 'yourdatabase',
             migratSchema: 'public',

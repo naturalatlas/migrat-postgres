@@ -20,7 +20,8 @@
     "migrat": "*"
   },
   "dependencies": {
-    "pg": "^3.6.2"
+    "pg": "^3.6.2",
+    "pg-escape": "0.0.3"
   },
   "devDependencies": {
     "mocha": "^2.0.1",
