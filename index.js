@@ -47,7 +47,10 @@ module.exports = function(options) {
 		function queryExecutor(sql) {
 			if (!sql) return null;
 			return function(context, callback) {
-				client.query(sql, callback);
+				client.query(sql, function(err) {
+					if (err) return callback(new Error('Postgres query failed: ' + (err.message || err)));
+					callback();
+				});
 			};
 		}
 		function checkExecutor(sql) {
@@ -55,8 +58,8 @@ module.exports = function(options) {
 			return function(context, callback) {
 				client.query(sql, function(err, result) {
 					if (err) return callback(err);
-					if (!result.rows) {
-						callback(new Error('Postgres check failed (query returned zero rows)'));
+					if (!result.rows.length) {
+						return callback(new Error('Postgres check failed (query returned zero rows)'));
 					}
 					callback();
 				});
