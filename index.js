@@ -94,7 +94,7 @@ module.exports = function(options) {
 
 				client.query('CREATE SCHEMA IF NOT EXISTS ' + options.migratSchema, function(err) {
 					if (err) return callback(new Error('Unable to create Postgres schema: ' + options.migratSchema + ' (message: "' + (err.message || err) + '")'));
-					client.query('CREATE TABLE IF NOT EXISTS ' + migratTable + ' (key varchar(22), value text)', function(err) {
+					client.query('CREATE TABLE IF NOT EXISTS ' + migratTable + ' (key varchar(22) PRIMARY KEY, value text)', function(err) {
 						if (err) return callback(new Error('Unable to create Postgres table: ' + migratTable + ' (message: "' + (err.message || err) + '")'));
 						callback();
 					});
