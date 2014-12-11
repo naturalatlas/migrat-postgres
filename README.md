@@ -1,4 +1,6 @@
 # migrat-postgres
+[![NPM version](http://img.shields.io/npm/v/migrat-postgres.svg?style=flat)](https://www.npmjs.org/package/migrat-postgres)
+[![Build Status](http://img.shields.io/travis/naturalatlas/migrat-postgres/master.svg?style=flat)](https://travis-ci.org/naturalatlas/migrat-postgres)
 
 The official [PostgreSQL](http://www.postgresql.org/) plugin for [Migrat](https://github.com/naturalatlas/migrat).
 

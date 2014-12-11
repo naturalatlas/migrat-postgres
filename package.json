@@ -14,6 +14,10 @@
     "postgresql",
     "sql"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/naturalatlas/migrat-postgres.git"
+  },
   "author": "Brian Reavis <brian@thirdroute.com>",
   "license": "Apache License, v2.0",
   "peerDependencies": {
