@@ -1,6 +1,6 @@
 {
   "name": "migrat-postgres",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "PostgreSQL adapter for the Migrat migration tool.",
   "main": "index.js",
   "scripts": {
