@@ -5,7 +5,7 @@
 The official [PostgreSQL](http://www.postgresql.org/) plugin for [Migrat](https://github.com/naturalatlas/migrat).
 
 - Implements global locking.
-- Implements global migration state storage, retrieval. 
+- Implements global migration state storage, retrieval.
 - Write migrations in pure PSQL.
 
 ```sh
@@ -54,17 +54,17 @@ DROP TABLE IF EXISTS user;
 
 -- check:
 SELECT EXISTS(
-    SELECT * 
-    FROM information_schema.tables 
-    WHERE 
-        table_schema = 'public' AND 
+    SELECT *
+    FROM information_schema.tables
+    WHERE
+        table_schema = 'public' AND
         table_name = 'user'
 );
 ```
 
 ## License
 
-Copyright &copy; 2014 [Brian Reavis](https://github.com/brianreavis) & [Contributors](https://github.com/naturalatlas/migrat-postgres/graphs/contributors)
+Copyright &copy; 2014–2016 [Natural Atlas, Inc.](https://github.com/naturalatlas) & [Contributors](https://github.com/naturalatlas/migrat-postgres/graphs/contributors)
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at: http://www.apache.org/licenses/LICENSE-2.0
 
