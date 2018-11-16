@@ -25,13 +25,15 @@ var pkg    = require('./package.json');
 module.exports = function(options) {
 	options.port = options.port || 5432;
 	options.host = options.host || 'localhost';
+	options.enableSSL = util.isBoolean(options.enableSSL) ? options.enableSSL : false;
 
-	var connectionString = util.format('postgres://%s:%s@%s:%d/%s',
+	var connectionString = util.format('postgres://%s:%s@%s:%d/%s?ssl=%s',
 		encodeURIComponent(options.user),
 		encodeURIComponent(options.password),
 		options.host,
 		options.port,
-		options.database
+		options.database,
+		options.enableSSL
 	);
 
 	return function(migrat) {
