@@ -45,11 +45,12 @@ describe('migrat-postgres', function() {
 					port: 5432,
 				})
 				client.connect();
-				client.query('SELECT * FROM user', (err, result) => {
+				client.query('SELECT * FROM myservice_user', (err, result) => {
 					if (err) return done();
-					assert.deepEqual(result.rows([
+					assert.deepEqual(result.rows, [
 						{ id: 1, username: 'testuser' },
-					]));
+						{ id: 2, username: 'testuser2' },
+					]);
 					done();
 				});
 			});

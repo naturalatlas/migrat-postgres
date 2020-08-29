@@ -2,7 +2,8 @@
 
 -- up:
 
-INSERT INTO user (username) VALUES ('testuser');
+INSERT INTO myservice_user (username) VALUES ('testuser');
+INSERT INTO myservice_user (username) VALUES ('testuser2');
 
 -- down:
 

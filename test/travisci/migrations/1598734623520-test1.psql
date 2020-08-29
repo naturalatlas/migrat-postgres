@@ -2,7 +2,7 @@
 
 -- up:
 
-CREATE TABLE user (
+CREATE TABLE myservice_user (
 	id serial PRIMARY KEY,
 	username varchar(40) NOT NULL
 );
