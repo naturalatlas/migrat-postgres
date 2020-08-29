@@ -46,12 +46,12 @@ describe('migrat-postgres', function() {
 				})
 				client.connect();
 				client.query('SELECT * FROM myservice_user', (err, result) => {
-					if (err) return done();
+					if (err) return done(err);
 					assert.deepEqual(result.rows, [
 						{ id: 1, username: 'testuser' },
 						{ id: 2, username: 'testuser2' },
 					]);
-					done();
+					client.end(done);
 				});
 			});
 		});
