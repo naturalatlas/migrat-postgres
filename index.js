@@ -16,6 +16,7 @@
  */
 
 const fs = require('fs');
+const async = require('async');
 const { Client } = require('pg');
 const escape = require('pg-escape');
 const parser = require('./lib/parser.js');
