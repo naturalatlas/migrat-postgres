@@ -32,8 +32,10 @@ describe('migrat-postgres', function() {
 			const root = path.resolve(__dirname, './travisci');
 			const migratBin = path.resolve(__dirname, '../node_modules/.bin/migrat');
 			const config = require(path.resolve(root, './migrat.config.js'));
+			console.log('');
 			const proc = spawn(migratBin, ['up'], { cwd: root, stdio: 'inherit' });
 			proc.on('exit', (code) => {
+				console.log('');
 				if (code !== 0) return done(new Error('migrat up exited with code ' + code));
 				client = new Client({
 					user: 'postgres',

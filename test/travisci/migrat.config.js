@@ -1,7 +1,9 @@
+const path = require('path');
 const postgres = require('../../index');
 
 module.exports = {
 	migrationsDir: './migrations',
+	localState: path.resolve(__dirname, './.migratdb'),
 	plugins: [
 		postgres({
 			host: 'localhost',
