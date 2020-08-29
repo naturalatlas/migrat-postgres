@@ -1,8 +1,12 @@
 language: node_js
 sudo: false
 node_js:
-  - "6"
-  - "4"
-  - "0.10"
+  - "10"
+  - "12"
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database testdb;' -U postgres
 script:
-  - make test
+  - npm install migrat
+  - TRAVIS_CI=1 make test

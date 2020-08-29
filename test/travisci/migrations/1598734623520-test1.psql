@@ -1,0 +1,12 @@
+-- Created on Sat Aug 29 2020 13:57:03 GMT-0700 (Pacific Daylight Time) by brianreavis
+
+-- up:
+
+CREATE TABLE user (
+	id serial PRIMARY KEY,
+	username varchar(40) NOT NULL
+);
+
+-- down:
+
+-- TODO: place query here

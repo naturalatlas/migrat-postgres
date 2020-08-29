@@ -15,33 +15,31 @@
  *   - `enableStateStorage` {boolean}: Use PostgresSQL to store global migration state (default: true)
  */
 
-var fs     = require('fs');
-var pg     = require('pg');
-var escape = require('pg-escape');
-var util   = require('util');
-var parser = require('./lib/parser.js');
-var pkg    = require('./package.json');
+const fs = require('fs');
+const { Client } = require('pg');
+const escape = require('pg-escape');
+const parser = require('./lib/parser.js');
+const pkg = require('./package.json');
 
 module.exports = function(options) {
 	options.port = options.port || 5432;
 	options.host = options.host || 'localhost';
 
-	var connectionString = util.format('postgres://%s:%s@%s:%d/%s',
-		encodeURIComponent(options.user),
-		encodeURIComponent(options.password),
-		options.host,
-		options.port,
-		options.database
-	);
-
 	return function(migrat) {
-		var client, terminateClient;
-		var migratTable = options.migratSchema + '.' + options.migratTable;
+		let client;
+		const migratTable = options.migratSchema + '.' + options.migratTable;
 
 		function createClient(callback) {
-			pg.connect(connectionString, function(err, client, done) {
-				if (err) err = new Error('Unable to connect to Postgres server (message: "' + (err.message || err) + '")');
-				callback(err, client, done);
+			const _client = new Client({
+				user: options.user,
+				host: options.host,
+				database: options.database,
+				password: options.password,
+				port: options.port,
+			})
+			_client.connect(err => {
+				if (err) return callback(new Error('Unable to connect to Postgres server (message: "' + (err.message || err) + '")'));
+				callback(null, _client);
 			});
 		}
 		function queryExecutor(sql) {
@@ -66,9 +64,9 @@ module.exports = function(options) {
 			};
 		}
 		function setValue(key, value, callback) {
-			var escaped_key = escape.literal(key);
-			var escaped_value = escape.literal(value);
-			var sql = [
+			const escaped_key = escape.literal(key);
+			const escaped_value = escape.literal(value);
+			const sql = [
 				'UPDATE ' + migratTable + ' SET value=' + escaped_value + ' WHERE key=' + escaped_key,
 				'INSERT INTO ' + migratTable + ' (key, value) SELECT ' + escaped_key + ', ' + escaped_value + ' WHERE NOT EXISTS (SELECT 1 FROM ' + migratTable + ' WHERE key=' + escaped_key + ' AND value=' + escaped_value + ')'
 			].join(';');
@@ -83,15 +81,10 @@ module.exports = function(options) {
 		migrat.setPluginVersion(pkg.version);
 
 		migrat.registerHook('initialize', function(callback) {
-			createClient(function(err, _client, done) {
-				if (err) {
-					done(err);
-					return callback(err);
-				}
+			createClient(function(err, _client) {
+				if (err) return callback(err);
 
 				client = _client;
-				terminateClient = done;
-
 				client.query('CREATE SCHEMA IF NOT EXISTS ' + options.migratSchema, function(err) {
 					if (err) return callback(new Error('Unable to create Postgres schema: ' + options.migratSchema + ' (message: "' + (err.message || err) + '")'));
 					client.query('CREATE TABLE IF NOT EXISTS ' + migratTable + ' (key varchar(22) PRIMARY KEY, value text)', function(err) {
@@ -100,11 +93,6 @@ module.exports = function(options) {
 					});
 				});
 			});
-		});
-
-		migrat.registerHook('terminate', function(callback) {
-			if (terminateClient) terminateClient();
-			callback();
 		});
 
 		migrat.registerLoader('*.psql', function(file, callback) {
@@ -142,33 +130,19 @@ module.exports = function(options) {
 					}
 
 					function createLock(callback) {
-						var rollback = function(client, done) {
-							client.query('ROLLBACK', function(err) {
-								return done(err);
-							});
-						};
-						createClient(function(err, client, done) {
+						createClient((err, client) => {
+							if (err) return callback(err);
+							const rollback = callback => client.query('ROLLBACK', callback);
 							client.query('BEGIN', function(err) {
-								if (err) {
-									rollback(client, done);
-									return callback(new Error('Failed to begin transaction'));
-								}
-								client.query('SELECT * FROM ' + migratTable + ' WHERE key = \'lock\'', function(err, result) {
-									if (err) {
-										rollback(client, done);
-										return callback(err);
-									}
+								if (err) return rollback(() => callback(new Error('Failed to begin transaction')));
+								client.query('SELECT * FROM ' + migratTable + ' WHERE key = \'lock\'', (err, result) => {
+									if (err) return rollback(() => callback(err));
 									if (result.rows.length) {
-										rollback(client, done);
-										return callback(null, false);
+										return rollback(() => callback(null, false));
 									}
-									client.query('INSERT INTO ' + migratTable + ' (key, value) VALUES ($1, $2)', ['lock', String((new Date()).getTime())], function(err) {
-										if (err) {
-											rollback(client, done);
-											return callback(err);
-										}
-										client.query('COMMIT', function(err) {
-											done(err);
+									client.query('INSERT INTO ' + migratTable + ' (key, value) VALUES ($1, $2)', ['lock', String((new Date()).getTime())], err => {
+										if (err) return rollback(() => callback(err));
+										client.query('COMMIT', err => {
 											if (err) {
 												callback(err);
 											} else {

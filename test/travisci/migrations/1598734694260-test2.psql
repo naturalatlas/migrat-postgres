@@ -1,0 +1,9 @@
+-- Created on Sat Aug 29 2020 13:58:14 GMT-0700 (Pacific Daylight Time) by brianreavis
+
+-- up:
+
+INSERT INTO user (username) VALUES ('testuser');
+
+-- down:
+
+-- TODO: place query here
