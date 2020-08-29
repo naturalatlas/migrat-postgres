@@ -27,6 +27,7 @@ module.exports = function(options) {
 
 	return function(migrat) {
 		let client;
+		const clients = [];
 		const migratTable = options.migratSchema + '.' + options.migratTable;
 
 		function createClient(callback) {
@@ -39,6 +40,7 @@ module.exports = function(options) {
 			})
 			_client.connect(err => {
 				if (err) return callback(new Error('Unable to connect to Postgres server (message: "' + (err.message || err) + '")'));
+				clients.push(_client);
 				callback(null, _client);
 			});
 		}
@@ -93,6 +95,15 @@ module.exports = function(options) {
 					});
 				});
 			});
+		});
+
+		migrat.registerHook('terminate', function(callback) {
+			async.each(clients, (client, callback) => {
+				client.end(err => {
+					if (err) console.error(err.message);
+					callback();
+				});
+			}, callback);
 		});
 
 		migrat.registerLoader('*.psql', function(file, callback) {
